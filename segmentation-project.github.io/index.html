@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nerfies: Deformable Neural Radiance Fields</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Semantic Segmentation of Brain Tumor on multi-band 3D volumes using non-uniform
+            3D U-Net</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://kulendu.github.io">Kulendu K Chakraborty</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/bishalr0y/">Bishal Roy</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/abhimanyu1506/">Abhimanyu Kumar</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.gimt-guwahati.ac.in/dept-page-faculty/department/engineering/computer-science-and-engineering/faculty-profile">Minakshi Gogoi</a><sup>2</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Dept. of Computer Science and Engineering, GIMT</span>
+            <br>
+            <span class="author-block"><sup>2</sup>Associate Professor & HoD, GIMT</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span> -->
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://docs.google.com/presentation/d/1k7SZ-Mdl4MOHoFxD0yIjWjTMhgP-ca2Ywxb-vPAuB3M/edit?usp=sharing"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Slides</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <!-- <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video> -->
+      <img src="../images/merged-pipeline.png" alt="">
+      <!-- <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
+        free-viewpoint
+        portraits.
+      </h2> -->
+    </div>
+  </div>
+</section>
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/steve.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/chair-tp.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/shiba.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/fullbody.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/blueshirt.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/mask.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/coffee.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-toby">
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/toby2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            A brain tumor is a cancerous and non-cancerous
+            mass or growth of abnormal cells in the brain. It can begin else-
+            where and spread to the brain. There is considerable significance
+            in MR-Images of the brain in identifying the outline of the tumor
+            and in identifying clinical relevance in the diagnosis, prognosis,
+            and treatment of the tumor. 
+          </p>
+          <p>
+            Recent improvements using deep
+            learning models have proved their effectiveness in various seg-
+            mentation and medical imaging tasks, many of which are based
+            on the U-Net network structure with symmetric encoding and
+            decoding paths for end-to-end segmentation.
+          </p>
+          <p>
+            In this work, we aim to develop a pipeline consisting of a baseline deep learning model
+            with 3D U-Net constituting adaptation in the training, model
+            structure, and model parameters/hyper-parameters for semantic
+            segmentation of brain tumors. Furthermore, instead of using
+            one model for best results, multiple variants of the U-Net were
+            trained with tweaked hyper-parameters and encoding/decoding
+            blocks to reduce errors and improve performance. Brain Tumor
+            Segmentation (BraTS) Challenge 2020 data was chosen as the
+            baseline for our choice. Semantic segmentation provides the
+            corresponding class for every pixel of the image and U-Net
+            architecture localizes the area of abnormality. The output of the
+            model provides a corresponding segmented mask of the tumor,
+            given a multi-band 3D scan of the brain (preferably MRI scans),
+            the main cause is to segment tumors from the volumized layers
+            semantically.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">UNet</h2>
+        <h2 class="title is-4">(baseline architecture)</h2>
+
+
+        <!-- Interpolating. -->
+        <div class="content has-text-justified">
+          <p>
+            U-Net, which evolved from the traditional convolu-
+            tional neural network, was first designed and applied in 2015 to
+            process biomedical images. As a general convolutional neural
+            network focuses its task on image classification [20], where
+            input is an image and output is one label, but in biomedical
+            cases, it requires us not only to distinguish whether there is
+            a disease but also to localize the area of abnormality. U-Net
+            is dedicated to solving this problem. The reason it is able
+            to localize and distinguish borders are by doingclassification on every pixel, so the input and output share
+            the same size.
+          </p>
+          <img src="../images/unet-wireframe.png"
+          class="interpolation-image"
+          alt="Interpolate start reference image."/>
+        </div>
+        
+      </div>
+    </div>
+
+
+    <div class="columns is-centered" style="margin-top: 50pt;">
+
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-5">Contracting Path</h2>
+          <img src="../images/encoder.png"
+          class="interpolation-image"
+          alt="Interpolate start reference image." />
+        </div>
+      </div>
+
+      <div class="column">
+        <h2 class="title is-5">Expansive Path</h2>
+        <div class="columns is-centered">
+          <div class="column content">
+            <img src="../images/decoder.png"
+            class="interpolation-image"
+            alt="Interpolate start reference image." />
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Animation. -->
+    <div class="columns is-centered has-text-centered" style="margin-top: 70pt;">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Poposed Pipeline</h2>
+
+        <!-- Interpolating. -->
+        <div class="content has-text-justified">
+          <p>
+            The study of semantically segmenting Brain Tumors from
+            MR-Images comprehending with multi-band channels on 3D
+            volumes are carried out in eight phases. 
+            <ul>
+              <li>
+                <strong>Step 1:</strong> Understand the Dataset (BraTS’20 Challenge
+                Data), with all the medical arrangements of the terminologies.
+              </li>
+
+              <li>
+                <strong>Step 2:</strong> Generate, scale, and process the Data.
+              </li>
+
+              <li>
+                <strong>Step 3:</strong> Define variants of the 3D U-Net architecture.
+              </li>
+
+              <li>
+                <strong>Step 4:</strong> Train the Segmentation Models (U-Net).
+              </li>
+
+              <li>
+                <strong>Step 5:</strong> Track the performance of the other models while
+                training, with hand-tweaked parameters.
+              </li>
+
+              <li>
+                <strong>Step 6:</strong> Performance analysis of the models trained and
+                generated outputs.
+              </li>
+
+              <li>
+                <strong>Step 7:</strong> Evaluate with the Benchmark parameters and
+                compare the Mask.
+              </li>
+
+              <li>
+                <strong>Step 8:</strong> Select the model with the best performance.
+              </li>
+            </ul>
+          </p>
+        </div>
+        <div class="columns is-centered">
+          <div class="column is-6 has-text-centered">
+            <img src="../images/pipeline.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+          </div>
+        </div>
+        <br/>
+        <!--/ Interpolating. -->
+
+        <!-- Re-rendering. -->
+        <h3 class="title is-3">Experimentation Details</h3>
+        <div class="content has-text-justified">
+          <p>
+            The training was performed on cloud GPU (Google Colab),
+            with the default RAM. Fifty epochs were used for training
+            each model. Implementation was based on the TensorFlow
+            framework. Fifty steps per batch were used at a time per epoch,
+            and the batch size was set to 2. The Adam optimizer [30] was
+            used with an initial learning rate (α) of 0.0001 without further
+            adjustments during the training, as it can self-adjust the rate
+            of gradient update so that no manual reduction of α is needed.
+            The total training time for all the models was recorded to be
+            about 20 hrs.
+          </p>
+          <div class="content has-text-centered">
+            <img src="../images/param-table.png"
+            class="interpolation-image"
+            alt="Interpolate start reference image."/>
+          </div>
+
+        </div>
+
+        <!--/ Re-rendering. -->
+
+      </div>
+    </div>
+    <!--/ Animation. -->
+
+
+        <!-- Animation. -->
+    <div class="columns is-centered has-text-centered" style="margin-top: 70pt;">
+      <div class="column is-full-width">
+        <h3 class="title is-3">Experimental Results</h3>
+
+        <!-- Interpolating. -->
+        <div class="content has-text-justified">
+
+          <div class="content has-text-justified">
+            <p>
+              It is not that easy to validate the performance of semantic
+              segmentation on bio-medical imaging, so for that, there is a
+              major non-homogeneity while choosing the evaluation met-
+              ric/parameter. For that reason, IoU (Intersection over Union)
+              has been selected as the standard measure for evaluating the
+              result of the ROI.
+            </p>
+            <p>
+              The lower the loss, the better
+              the model is, the higher the accuracy, and the more satisfactory
+              the results. Out of all the five models, ϕelu performs best on
+              top of all the other four models. All of these training was done
+              on 50 epochs.
+              From all of the results, it is concluded that U-Net using
+              ELU as the activation function can learn the visual features and
+              segmentation margin from different training samples achieving
+              the highest accuracy of 0.9821 (98.21 in %).
+            </p>
+            <div class="content has-text-centered">
+              <img src="../images/info-table.png"
+              class="interpolation-image"
+              alt="Interpolate start reference image."/>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Concurrent Work. -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            There's a lot of excellent work that was introduced around the same time as ours.
+          </p>
+          <p>
+            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
+          </p>
+          <p>
+            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
+            both use deformation fields to model non-rigid scenes.
+          </p>
+          <p>
+            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>
+          </p>
+          <p>
+            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+          </p>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Concurrent Work. -->
+
+  </div>
+</section>
+
+<!-- 
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+
+<!-- <footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer> -->
+
+</body>
+</html>
