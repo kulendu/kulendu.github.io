@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <title>Diffusion 3D Features (Diff3F)</title>
+    <meta content="Diffusion 3D Features (Diff3F): Decorating Untextured Shapes with Distilled Semantic Features [CVPR 2024]" name="description" />
+    <meta content="summary" name="twitter:card" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="static/css/template.css" rel="stylesheet" type="text/css" />
+    <link href="static/css/my_style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        WebFont.load({
+            google: {
+                families: ["Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic", "Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic", "Ubuntu:300,300italic,400,400italic,500,500italic,700,700italic", "Changa One:400,400italic", "Open Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic", "Varela Round:400", "Bungee Shade:regular", "Roboto:300,regular,500"]
+            }
+        });
+    </script> 
+    <script type="text/javascript">
+        ! function (o, c) {
+            var n = c.documentElement,
+                t = " w-mod-";
+            n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n.className += t + "touch")
+        }(window, document);
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SGF85932PS"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SGF85932PS');
+    </script>
+    <!-- <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet"> -->
+    <script type="text/javascript" src="static/js/zoom.js"></script>
+    <script type="text/javascript" src="static/js/video_comparison.js"></script>
+    <style>
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+    
+        table, th, td {
+          border: 1px solid black;
+        }
+    
+        th, td {
+          padding: 8px;
+          text-align: center;
+        }
+    
+        th {
+          background-color: #f2f2f2;
+        }
+        .containerside {
+            width: 45%;
+            float: left;
+            margin: 2.5%;
+        }
+
+        .image-container1 {
+        width: 40%; /* Set the width to 80% of the parent container */
+        max-width: 400px; /* Set a maximum width to prevent excessive scaling */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .image-container1 img {
+        width: 100%; /* Make the image fill its container */
+        height: auto; /* Maintain the aspect ratio */
+    }
+
+    .image-container2 {
+        width: 65%; /* Set the width to 80% of the parent container */
+        max-width: 700px; /* Set a maximum width to prevent excessive scaling */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .image-container2 img {
+        width: 100%; /* Make the image fill its container */
+        height: auto; /* Maintain the aspect ratio */
+    }
+
+        .image-container3 {
+        width: 80%; /* Set the width to 80% of the parent container */
+        max-width: 900px; /* Set a maximum width to prevent excessive scaling */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .image-container3 img {
+        width: 100%; /* Make the image fill its container */
+        height: auto; /* Maintain the aspect ratio */
+    }
+
+    .wtable {
+        width: 90%;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Media query for smaller screens */
+    @media (max-width: 600px) {
+        .wtable {
+            width: 100%;
+        }
+
+        /* Increase specificity for smaller screens */
+        .wtable td {
+            font-size: 7px !important; 
+            max-width: 30px !important;
+            white-space: normal;
+        }
+        .wtable th {
+            font-size: 7px !important; 
+            max-width: 30px !important;
+            white-space: normal;
+        }
+    }
+
+    /* Common styles for both large and small screens */
+    .wtable table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .wtable th, .wtable td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .wtable th {
+        background-color: #f2f2f2;
+    }
+
+    @media (max-width: 600px) {
+    .white_section_nerf_ref {
+        display: none; /* Hide the section on smaller screens */
+    }
+    }   
+    
+
+    </style>
+
+</head>
+
+
+<body>
+    <div class="section hero nerf-_v2">
+        <div class="container-2 nerf_header_v2 w-container">
+            <h1 class="nerf_title_v2">3DMP: 3D Motion Priors for Motion Retargeting</h1>
+            <!-- <div class="nerf_subheader_v2">Decorating Untextured Shapes with Distilled Semantic Features</div> -->
+            <!-- <div class="nerf_subheader_v2" style="color: #ff7411;"><b>CVPR 2024</b></div> -->
+            <!-- <div class="nerf_subheader_v2"><b>[CVPR 2024]</b></div> -->
+        </div>
+            <div class="nerf_subheader_v2">
+                <div>
+                    <a href="https://niladridutt.com/" target="_blank" class="nerf_authors_v2">Kulendu Kashyap Chakraborty<span
+                            class="text-span_nerf"></span></a><sup> 1, *</sup>,&nbsp;&nbsp;
+                    <a href="https://sanjeevmk.github.io/" target="_blank" class="nerf_authors_v2">Shubh Maheswari<span
+                            class="text-span_nerf"></span></a><sup> 2, *</sup>,&nbsp;&nbsp;
+                    <a href="http://www0.cs.ucl.ac.uk/staff/n.mitra/" target="_blank" class="nerf_authors_v2">Ramya Heblaguppe<span
+                            class="text-span_nerf"></span></a><sup> 3</sup>,&nbsp;&nbsp;
+                            <br>
+                    <a href="http://www0.cs.ucl.ac.uk/staff/n.mitra/" target="_blank" class="nerf_authors_v2">Praneeth Chakravarthula<span
+                        class="text-span_nerf"></span></a><sup> 4</sup>,&nbsp;&nbsp;
+                    <a href="http://www0.cs.ucl.ac.uk/staff/n.mitra/" target="_blank" class="nerf_authors_v2">Avinash Sharma<span
+                        class="text-span_nerf"></span></a><sup> 1</sup>
+                </div>
+                <div>
+                    <h1 class="nerf_affiliation_v2"><sup>1</sup> Indian Institute of Technology Jodhpur</h1>,&nbsp;&nbsp;
+                    <h1 class="nerf_affiliation_v2"><sup>2</sup> UCSD </h1>,&nbsp;&nbsp;
+                    <h1 class="nerf_affiliation_v2"><sup>3</sup> TCS Research</h1>, &nbsp;&nbsp;
+                    <h1 class="nerf_affiliation_v2"><sup>4</sup> UNC Chapel Hill</h1> 
+                    <br>
+                    <h1 class="nerf_affiliation_v2"><sup>*</sup> Denotes Equal Contribution</h1> 
+                </div>
+
+                <div class="external-link">
+                    <a class="btn" href="https://arxiv.org/abs/2311.17024" role="button" target="_blank">
+                        <i class="ai ai-arxiv"></i> Arxiv </a>
+                </div>
+
+            </div>
+        <div class="image-container2">
+            <img src="assets/teaser.png">
+            <figcaption style="font-size: medium;">An overview of the Pipeline, showcasing different modules for handling different 
+                aspects of the Retargeting, aiming for producing a realistic motion.
+            </figcaption>
+        </div>
+
+    </div>
+    <br>
+
+    <!-- Abstract -->
+    <div data-anchor="slide1" class="section nerf_section">
+        <div class="w-container grey_container">
+            <h2 class="grey-heading_nerf">Abstract</h2>
+            <p class="paragraph-3 nerf_text nerf_results_text">
+                We present a pipeline to retarget motion from RGB/D videos to RaBit, which is a first large-scale parametric model of 3D biped cartoon characters. We also propose our own dataset, which contains human-like motion on a wide variety of topologically-consistent biped characters. 
+                Pose (<i>&theta;</i>) and shape (<i>&beta;</i>) are estimated using state-of-the-art SMPL based body model estimation methods, we have also used methods for estimating and using the scene-contact information for better understanding of the semantics of the input. Once the mesh is obtained, we establish joint correspondences for RaBit to SMPL and then the distance between the corresponding joints are minimized using a loss function. 
+                Inverse Kinematics is then performed using the rotation information from the SOTA pose estimation method, 
+                the final retargeted mesh is then re-rendered with some interactive/interesting scene using Stable Diffusion variants.
+
+                <br>
+                <!-- <img  src="assets/images/overview.png"> -->
+            </p>
+        </div>
+    </div>
+
+
+    <div class="white_section_nerf w-container">
+        <h2 class="grey-heading_nerf">3DMP Summary</h2>
+        <div class="image-container2">
+            <img src="assets/overview.png">
+        </div>
+        <p>We decorate 3D points of a given shape in any modality- point clouds or meshes, with rich semantic descriptors. Given the scarcity of 3D geometry data from which to learn these meaningful descriptors, we leverage foundational vision models trained on very large datasets to obtain these features. This enables Diff3F to produce semantic descriptors in a zero-shot way.</p>
+        
+        <h4>Key features:</h4>
+        <p class="paragraph-3 nerf_results_text">
+            <ul style="font-family: Lato, Sand-Serif; font-size: 16px; font-weight: 300">
+                <li>
+                    <strong>Point 1:</strong> jlnsud
+                </li>
+            </ul>
+        </p>
+
+        <div class="image-container3">
+            <img src="assets/gallery.jpg">
+        </div>
+        <div class="image-container3">
+            <img src="assets/pipeline.jpg">
+        </div>
+        <div class="container-2 nerf_header_v2 w-container" style="text-align: left;">
+        <p> <b>Method overview.</b>
+            We render a given shape without textures from multiple views, and the resulting renderings are in-painted by guiding ControlNet with geometric conditions; 
+            the generative features from ControlNet are fused with DINO features obtained from the textured rendering, followed by unprojecting to the 3D surface. 
+            Note that the textured images obtained by conditioning ControlNet from different views can be inconsistent but when aggregated it produces stable sematic descriptors. Please refer to our paper for more details.</p>
+        </div>
+        </div>
+    </div>
+
+
+    <div class="white_section_nerf w-container">
+        <h2 class="grey-heading_nerf">Semantic Understanding</h2>
+        <p>We showcase heatmaps for visualization of our semantic descriptors. For a query point in the source (denoted by a red ball), we see sematically related points being highlighted in the target. The highest similarity point in the target is indicated by a red ball.</p>
+        <div class="image-container1">
+            <img src="assets/hmap.png">
+        </div>
+        <div class="grid-container-4">
+            <!-- First Image -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap10_query.png">
+            </div>
+    
+            <!-- First Video -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap10.mp4"></video>
+            </div>
+    
+            <!-- Second Image -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap2_query.png">
+            </div>
+    
+            <!-- Second Video -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap2.mp4"></video>
+            </div>
+    
+            <!-- Third Image -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap9_query.png">
+            </div>
+    
+            <!-- Third Video -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap9.mp4"></video>
+            </div>
+    
+            <!-- Fourth Image -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap4_query.png">
+            </div>
+    
+            <!-- Fourth Video -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap4.mp4"></video>
+            </div>
+
+            <!-- First Image -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap5_query.png">
+            </div>
+    
+            <!-- First Video -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap5.mp4"></video>
+            </div>
+    
+            <!-- <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap6_query.png">
+            </div>
+    
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap6.mp4"></video>
+            </div>
+    
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap7_query.png">
+            </div>
+    
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap7.mp4"></video>
+            </div> -->
+    
+            <!-- Fourth Image -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Source</p>
+                <img src="assets/heatmap_results/hmap8_query.png">
+            </div>
+    
+            <!-- Fourth Video -->
+            <div class="grid-item">
+                <p class="myprompt nerf_text">Target</p>
+                <video class="video" loop playsinline autoplay muted src="assets/heatmap_results/hmap8.mp4"></video>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="white_section_nerf w-container">
+        <h2 class="grey-heading_nerf">Evaluation on SHREC'07.</h2>
+    <table>
+    <caption style="text-align: left;">DIFF3F (ours) attains 3.5x lower error compared to DPC. We were unable to evaluate SE-ORNet on SHREC'07 as the method failed on shape classes where the number of points in the point cloud is low (SHREC'07 has as low as 11 annotated points for some classes).</caption>
+    <tr>
+      <th><strong>Method</strong></th>
+      <th>acc &uarr;</th>
+      <th>err &darr;</th>
+    </tr>
+    <tr>
+      <td>DPC [2]</td>
+      <td>35.63</td>
+      <td>4.91</td>
+    </tr>
+    <tr>
+      <td>SE-ORNet[3]</td>
+      <td>✘</td>
+      <td>✘</td>
+    </tr>
+    <tr>
+      <td>Diff3F (ours)</td>
+      <td><strong>52.73</strong></td>
+      <td><strong>1.41</strong></td>
+    </tr>
+  </table>
+    </div> -->
+
+    <div class="white_section_nerf w-container">
+        <h2 class="grey-heading_nerf">Zero-Shot Part segmentation</h2>
+        <p> K-means clustering can be directly applied to our Diff3F descriptors to extract part segments. Interestingly, we discover that the k-means 
+            centroids, extracted from one shape (e.g., human), can be used to segment another (e.g., cat), thanks to the semantic nature of our descriptors. This leads to
+            corresponding part segmentation (arms of the human map to front legs of the cat, head maps to head, etc.) as seen in the figure below.</p>
+
+            <div class="image-container3">
+                <img src="assets/segment.jpg">
+            </div>
+
+            <h2 class="grey-heading_nerf">Regularizing Point-to-Point Maps</h2>
+            <p> Diff3F descriptors can be effortlessly plugged into existing geometry processing pipelines such as Functional Maps. We compare the effectiveness of vanilla functional maps [5] with the Wave Kernel Signature as descriptors [6] vs our descriptors Diff3F. Ours being semantic enables Functional Maps to work with non-isometric deformations even though FMs typically struggle with such cases when using traditional geometric descriptors. 
+                Our descriptors yield accurate correspondence in most cases, thus eliminating the need for further refinement algorithms typically used in related works. </p>
+    
+                <div class="image-container3">
+                    <img src="assets/FM.jpg">
+                </div>
+
+        <!-- <div class="grid-container-3">
+            
+            <div class="grid-item">
+                <p class="myprompt nerf_text">k=6</p>
+                <img src="assets/seg/human_seg_1.png">
+            </div>
+    
+           
+            <div class="grid-item">
+                <p class="myprompt nerf_text">segmented using centroids of human</p>
+                <img src="assets/seg/cat_seg_2.png">
+            </div>
+    
+            
+            <div class="grid-item">
+                <p class="myprompt nerf_text">k=6</p>
+                <img src="assets/seg/elephant_seg_4.png">
+            </div>
+            
+            <div class="grid-item">
+                <p class="myprompt nerf_text">k=3</p>
+                <img src="assets/seg/chair_seg_3.png">
+            </div>
+    
+            
+            <div class="grid-item">
+                <p class="myprompt nerf_text">k=3</p>
+                <img src="assets/seg/fish_seg_5.png">
+            </div>
+    
+            <div class="grid-item">
+                <p class="myprompt nerf_text">segmented using centroids of dolphin</p>
+                <img src="assets/seg/bird_seg_6.png">
+            </div>
+        </div>-->
+
+
+    </div> 
+
+    <div class="white_section_nerf w-container">
+        <h2 class="grey-heading_nerf">Comparison to Prior Works</h2>
+        <!-- <div class="grid-container-2">
+            <div class="grid-item" style="width: 200px;">
+                <img src="assets/compare.jpg">
+                <p class="myprompt nerf_text">We compare our DIFF3F (bottom) against SOTA methods (i.e., DPC and SE-ORNet) for the task of point-to-point shape correspondence. 
+                    Corresponding points, computed as described in Section 3.4, are similarly colored. We show results using point cloud rendering of our method for the human pair (left) and results with mesh rendering for the animal pair (right). 
+        </p>
+            </div>
+    
+            <div class="grid-item" style="width: 300px";>
+                <img src="assets/descriptor.jpg">
+                <p class="myprompt nerf_text">Source</p>
+            </div>
+        </div> -->
+
+            <div class="image-container3">
+                <img src="assets/animal-comp.jpg">
+            </div>
+            <br>
+
+            <div class="image-container2">
+                <img src="assets/man-comp.jpg">
+            </div>
+
+        <p>We compare our Diff3F against SOTA methods (i.e., DPC and SE-ORNet) for the task of point-to-point shape correspondence. 
+            Corresponding points are similarly colored. We show results with mesh rendering for the animal pair (top) and results using point cloud rendering of our method for the human pair (bottom).
+            While DPC and SE-ORNet both get confused by the different alignments of the human pair resulting in a laterally flipped prediction, ours, being a multi-view rendering-based method, it is robust to rotation. 
+        </p>
+        <!-- <div class="containerside" style="text-align: left;">
+        <p><b>Comparisons.</b>         </p>
+        </div> -->
+        <!-- <div class="containerside" style="text-align: right;">
+            <p><b>Regularizing point-2-point maps.</b> We compare the effectiveness of vanilla functional maps [5] with the Wave Kernel Signature as descriptors [6] (top) vs our descriptors Diff3F (bottom). Ours being semantic enables Functional Maps to work with non-isometric deformations even though FMs typically struggle with such cases when using traditional geometric descriptors. 
+                Our descriptors yield accurate correspondence in most cases, thus eliminating the need for further refinement algorithms typically used in related works. </p>
+        </div> -->
+    </div>
+    <div class="wtable w-container">
+        <h2 class="grey-heading_nerf">Evaluation Comparison</h2>
+        <table>
+            <caption style="text-align: left;"> We report correspondence accuracy within 1% error tolerance, with our method against competing works. The Laplace Beltrami Operator~(LBO) computation for Functional Maps[5] is unstable on TOSCA [7] since the inputs contain non-manifold meshes. 
+                By ‘*’ we denote results reported by SE-ORNet [3].</caption>
+            <tr>
+              <th rowspan="2"><strong>Method &rarr;</strong>
+                <br><strong>Dataset &darr; </strong></th>
+              <th colspan="2">DPC [2]</th>
+              <th colspan="2">SE-ORNet [3]</th>
+              <th colspan="2">3DCODED [4]</th>
+              <th colspan="2">FM [5]+WKS [6]</th>
+              <th colspan="2">Diff3F (ours)</th>
+              <th colspan="2">Diff3F (ours)+FM[5]</th>
+            </tr>
+            <tr>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+            </tr>
+            <tr>
+              <td>TOSCA [7]</td>
+              <td><u><i>30.79</i></u></td>
+              <td><strong>3.74</strong></td>
+              <td><strong>33.25</strong></td>
+              <td><u><i>4.32</i></u></td>
+              <td>0.5*</td>
+              <td>19.2*</td>
+              <td colspan="2">✘</td>
+              <td>20.27</td>
+              <td>5.69</td>
+              <td colspan="2">✘</td>
+            </tr>
+            <tr>
+              <td>SHREC'19 [8]</td>
+              <td>17.40</td>
+              <td>6.26</td>
+              <td>21.41</td>
+              <td>4.56</td>
+              <td>2.10</td>
+              <td>8.10</td>
+              <td>4.37</td>
+              <td>3.26</td>
+              <td><strong>26.41</strong></td>
+              <td><u><i>1.69</i></u></td>
+              <td><u><i>21.55</i></u></td>
+              <td><strong>1.49</strong></td>
+            </tr>
+            <tr>
+              <td>SHREC'20 [9]</td>
+              <td>31.08</td>
+              <td>2.13</td>
+              <td>31.70</td>
+              <td>1.00</td>
+              <td colspan="2">✘</td>
+              <td>4.13</td>
+              <td>7.29</td>
+              <td><strong>72.60</strong></td>
+              <td><u><i>0.93</i></u></td>
+              <td><u><i>62.34</i></u></td>
+              <td><strong>0.71</strong></td>
+            </tr>
+            </table>
+        
+    </div>
+    <div class="wtable w-container">
+        <h2 class="grey-heading_nerf">Generalization</h2>
+        <table>
+            <caption style="text-align: left;"> We compare generalization capabilities of Diff3F vs others, by training on one dataset and testing on a different set. 
+                For DPC and SE-ORNet, we choose SURREAL and SMAL as the training sets for human and animal shapes respectively as these datasets are significantly larger and lead to improved generalization scores. 
+                By '*' we denote results reported by SE-ORNet [3]. Ours sees significantly higher scores for generalization.</caption>
+            <tr>
+              <th rowspan="2"><strong>Train</strong></th>
+              <th rowspan="2"><strong>Method</strong></th>
+              <th colspan="2">TOSCA [7]</th>
+              <th colspan="2">SHREC'19 [8]</th>
+              <th colspan="2">SHREC'20 [9]</th>
+            </tr>
+            <tr>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+              <th>acc &uarr;</th>
+              <th>err &darr;</th>
+            </tr>
+            <tr>
+              <td rowspan="2">SURREAL</td>
+              <td>DPC [2]</td>
+              <td>29.30</td>
+              <td><u><i>5.25</i></u></td>
+              <td>17.40</td>
+              <td>6.26</td>
+              <td>31.08</td>
+              <td>2.13</td>
+            </tr>
+            <tr>
+              <td>SE-ORNET [3]</td>
+              <td>16.71</td>
+              <td>9.19</td>
+              <td><u><i>21.41</i></u></td>
+              <td><u><i>4.56</i></u></td>
+              <td><u><i>31.70</i></u></td>
+              <td><u><i>1.00</i></u></td>
+            </tr>
+            <tr>
+              <td rowspan="2">SMAL</td>
+              <td>DPC [2]</td>
+              <td><u><i>30.28</i></u></td>
+              <td>6.43</td>
+              <td>12.34</td>
+              <td>8.01</td>
+              <td>24.5*</td>
+              <td>7.5*</td>
+            </tr>
+            <tr>
+              <td>SE-ORNET [3]</td>
+              <td><strong>31.59</strong></td>
+              <td><strong>4.76</strong></td>
+              <td>12.49</td>
+              <td>9.87</td>
+              <td>25.4*</td>
+              <td>2.9*</td>
+            </tr>
+            <tr>
+              <td>Pretrained</td>
+              <td>Diff3F</td>
+              <td>20.27</td>
+              <td>5.69</td>
+              <td><strong>26.41</strong></td>
+              <td><strong>1.69</strong></td>
+              <td><strong>72.60</strong></td>
+              <td><strong>0.93</strong></td>
+            </tr>
+          </table>
+    </div>
+
+    <br><br>
+    
+
+    
+
+<div class="white_section_nerf_ref w-container">
+<h2 class="grey-heading_nerf">References</h2>
+    <br>
+    [1] Daniela Giorgi, Silvia Biasotti, and Laura Paraboschi. Shape077
+    retrieval contest 2007: Watertight models track. SHREC competition, 8(7):7, 2007.<br>
+    [2] Itai Lang, Dvir Ginzburg, Shai Avidan, and Dan Raviv. Dpc: Unsupervised deep point correspondence via cross and self construction. In 2021 International Conference on 3D Vision (3DV), pages 1442–1451. IEEE, 2021. 
+    <br>
+    [3] Jiacheng Deng, Chuxin Wang, Jiahao Lu, Jianfeng He, Tianzhu Zhang, Jiyang Yu, and Zhe Zhang. Se-ornet: Self- ensembling orientation-aware network for unsupervised point cloud shape correspondence. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 5364–5373, 2023.
+    <br>
+    [4] Thibault Groueix, Matthew Fisher, Vladimir G Kim, Bryan C Russell, and Mathieu Aubry. 3d-coded: 3d correspondences by deep deformation. In Proceedings of the european conference on computer vision (ECCV), pages 230–246, 2018.
+    <br>
+    [5] Maks Ovsjanikov, Mirela Ben-Chen, Justin Solomon, Adrian Butscher, and Leonidas Guibas. Functional maps: a flexible representation of maps between shapes. ACM Transactions on Graphics (ToG), 31(4):1–11, 2012.
+    <br>
+    [6] Mathieu Aubry, Ulrich Schlickewei, and Daniel Cremers. The wave kernel signature: A quantum mechanical approach to shape analysis. In 2011 IEEE international conference on computer vision workshops (ICCV workshops), pages 1626– 1633. IEEE, 2011. 
+    <br>
+    [7] Alexander M Bronstein, Michael M Bronstein, and Ron Kimmel. Numerical geometry of non-rigid shapes. Springer Science & Business Media, 2008.
+    <br>
+    [8] Simone Melzi, Riccardo Marin, Emanuele Rodola`, Umberto Castellani, Jing Ren, Adrien Poulenard, Peter Wonka, and Maks Ovsjanikov. Shrec 2019: Matching humans with different connectivity. In Eurographics Workshop on 3D Object Retrieval, page 3. The Eurographics Association, 2019.
+    <br> 
+    [9] Roberto M Dyke, Yu-Kun Lai, Paul L Rosin, Stefano Zappala`, Seana Dykes, Daoliang Guo, Kun Li, Riccardo Marin, Simone Melzi, and Jingyu Yang. Shrec’20: Shape correspondence with non-isometric deformations. Computers & Graphics, 92:28–43, 2020.
+    <br><br><br>
+    <!-- <pre><code>
+
+  </code></pre> -->
+</div>
+
+
+<div class="white_section_nerf grey_container w-container">
+    <h2 class="grey-heading_nerf">BibTeX</h2>
+    <div class="bibtex">
+        <pre><code>
+@InProceedings{Dutt_2024_CVPR,
+    author    = {Dutt, Niladri Shekhar and Muralikrishnan, Sanjeev and Mitra, Niloy J.},
+    title     = {Diffusion 3D Features (Diff3F): Decorating Untextured Shapes with Distilled Semantic Features},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2024},
+    pages     = {4494-4504}
+}          
+      </code></pre>
+    </div>
+    </div>
+
+</body>
+<footer>
+    Template adapted from <a href="https://mrtornado24.github.io/DreamCraft3D/" target="_blank">DreamCraft3D</a> <br>
+    <!-- <div style="width: 60px; height: 20px; display: flex; align-items: center; justify-content: center;">
+        <a href="https://hits.seeyoufarm.com">
+            <img style="width: 100%;" src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdiff3f.github.io&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" alt="hits"/>
+        </a>
+    </div> -->
+    
+    <br><br><br>
+</footer> 
+</html>
